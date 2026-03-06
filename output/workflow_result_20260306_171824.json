@@ -1,0 +1,11 @@
+{
+  "success": false,
+  "chapter": {},
+  "characters": [],
+  "scenes": [],
+  "images": [],
+  "videos": [],
+  "errors": [
+    "Invalid URL 'None': No scheme supplied. Perhaps you meant https://None?"
+  ]
+}

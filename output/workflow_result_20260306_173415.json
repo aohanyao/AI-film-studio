@@ -1,0 +1,87 @@
+{
+  "success": true,
+  "chapter": {
+    "characters": [
+      {
+        "name": "林小雨",
+        "description": "23岁女性，穿着米白色毛衣，长发披肩",
+        "personality": [
+          "温柔",
+          "恬静"
+        ],
+        "role": "主角",
+        "importance": 9,
+        "char_id": "char_林小雨"
+      },
+      {
+        "name": "陈默",
+        "description": "约莫30岁男性，穿着深灰色风衣，面容冷峻，眼神锐利",
+        "personality": [
+          "冷静",
+          "敏锐"
+        ],
+        "role": "主角",
+        "importance": 10,
+        "char_id": "char_陈默"
+      }
+    ],
+    "scenes": [
+      {
+        "location": "咖啡馆",
+        "description": "安静的室内，阳光透过窗户洒在木桌上",
+        "time": "午后",
+        "atmosphere": [
+          "温馨",
+          "放松"
+        ],
+        "importance": 8,
+        "prompt": "安静的室内，阳光透过窗户洒在木桌上, cinematic lighting, movie quality, film grain, dramatic lighting, volumetric lighting, medium shot, waist up, standard lens"
+      }
+    ],
+    "metadata": {
+      "text_length": 238,
+      "character_count": 2,
+      "scene_count": 1
+    }
+  },
+  "characters": [
+    {
+      "name": "林小雨",
+      "description": "23岁女性，穿着米白色毛衣，长发披肩",
+      "personality": [
+        "温柔",
+        "恬静"
+      ],
+      "role": "主角",
+      "importance": 9,
+      "char_id": "char_林小雨"
+    },
+    {
+      "name": "陈默",
+      "description": "约莫30岁男性，穿着深灰色风衣，面容冷峻，眼神锐利",
+      "personality": [
+        "冷静",
+        "敏锐"
+      ],
+      "role": "主角",
+      "importance": 10,
+      "char_id": "char_陈默"
+    }
+  ],
+  "scenes": [
+    {
+      "location": "咖啡馆",
+      "description": "安静的室内，阳光透过窗户洒在木桌上",
+      "time": "午后",
+      "atmosphere": [
+        "温馨",
+        "放松"
+      ],
+      "importance": 8,
+      "prompt": "安静的室内，阳光透过窗户洒在木桌上, cinematic lighting, movie quality, film grain, dramatic lighting, volumetric lighting, medium shot, waist up, standard lens"
+    }
+  ],
+  "images": [],
+  "videos": [],
+  "errors": []
+}

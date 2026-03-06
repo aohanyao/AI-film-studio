@@ -44,7 +44,7 @@ class PromptTemplates:
             "name": "特写",
             "description": "close-up shot, face and shoulders",
             "camera": "portrait lens, bokeh",
-            "keywords": "emotions", "expressions", "details"
+            "keywords": ["emotions", "expressions", "details"]
         },
         "extreme_closeup": {
             "name": "大特写",
