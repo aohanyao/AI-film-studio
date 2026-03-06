@@ -23,6 +23,8 @@ from character_manager import CharacterManager
 from prompt_templates import PromptTemplates
 # 导入 ComfyUI 封装
 from comfyui_wrapper import ComfyUIWrapper
+# 导入飞书客户端
+from feishu_client import FeishuClient
 
 
 app = Flask(__name__)
@@ -46,7 +48,8 @@ def index():
             '角色管理',
             '提示词生成',
             '图像生成',
-            '视频生成'
+            '视频生成',
+            '飞书集成'
         ]
     })
 
@@ -108,6 +111,7 @@ def get_characters():
     """获取所有角色"""
     try:
         manager = CharacterManager()
+        manager.characters_dir = config.get('character_manager', {}).get('characters_dir', 'characters')
         characters = manager.get_all_characters()
         return jsonify({
             'success': True,
@@ -125,6 +129,7 @@ def add_character():
     try:
         data = request.json
         manager = CharacterManager()
+        manager.characters_dir = config.get('character_manager', {}).get('characters_dir', 'characters')
         char_id = manager.add_character(data)
         return jsonify({
             'success': True,
@@ -146,6 +151,7 @@ def add_reference_image(char_id):
         data = request.json
         image_path = data.get('image_path', '')
         manager = CharacterManager()
+        manager.characters_dir = config.get('character_manager', {}).get('characters_dir', 'characters')
         manager.add_reference_image(char_id, image_path)
         return jsonify({
             'success': True,
@@ -202,7 +208,7 @@ def generate_image():
         workflow_path = data.get('workflow_path', 'workflows/image_generation.json')
         
         # 创建 ComfyUI 封装
-        comfy_config = config.get('comfyui', {})
+        comfy comfy_config = config.get('comfyui', {})
         wrapper = ComfyUIWrapper(
             host=comfy_config.get('host', '127.0.0.1'),
             port=comfy_config.get('port', 8018)
@@ -315,6 +321,149 @@ def call_llm():
                 'success': False,
                 'error': '未提供消息'
             }), 400
+    
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+# ── 飞书 API ─────────────────────────────────────────────────
+@app.route('/api/feishu/doc', methods=['GET'])
+def get_feishu_doc():
+    """获取飞书文档内容"""
+    try:
+        doc_token = request.args.get('doc_token', '')
+        
+        if not doc_token:
+            return jsonify({
+                'success': False,
+                'error': '缺少 doc_token 参数'
+            }), 400
+        
+        feishu_config = config.get('feishu', {})
+        app_id = feishu_config.get('app_id', '')
+        app_secret = feishu_config.get('app_secret', '')
+        
+        if not app_id or not app_secret:
+            return jsonify({
+                'success': False,
+                'error': '飞书配置不完整'
+            }), 500
+        
+        client = FeishuClient(app_id, app_secret)
+        doc_content = client.get_doc_content(doc_token)
+        
+        if doc_content:
+            blocks = doc_content.get('items', [])
+            text = client.extract_text_from_blocks(blocks)
+            
+            return jsonify({
+                'success': True,
+                'data': {
+                    'blocks': blocks,
+                    'text': text
+                }
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'error': '获取文档内容失败'
+            }), 500
+    
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/feishu/send_message', methods=['POST'])
+def send_feishu_message():
+    """发送飞书消息"""
+    try:
+        data = request.json
+        chat_id = data.get('chat_id', '')
+        text = data.get('text', '')
+        
+        if not chat_id or not text:
+            return jsonify({
+                'success': False,
+                'error': '缺少必要参数'
+            }), 400
+        
+        feishu_config = config.get('feishu', {})
+        app_id = feishu_config.get('app_id', '')
+        app_secret = feishu_config.get('app_secret', '')
+        
+        if not app_id or not app_secret:
+            return jsonify({
+                'success': False,
+                'error': '飞书配置不完整'
+            }), 500
+        
+        client = FeishuClient(app_id, app_secret)
+        success = client.send_text_message(chat_id, text)
+        
+        if success:
+            return jsonify({
+                'success': True
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'error': '发送消息失败'
+            }), 500
+    
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/feishu/send_progress', methods=['POST'])
+def send_feishu_progress():
+    """发送飞书进度消息"""
+    try:
+        data = request.json
+        chat_id = data.get('chat_id', '')
+        title = data.get('title', '')
+        status = data.get('status', 'running')
+        current_step = data.get('current_step', '')
+        total_steps = data.get('total_steps', 1)
+        current_step_index = data.get('current_step_index', 0)
+        details = data.get('details', '')
+        
+        if not chat_id or not title:
+            return jsonify({
+                'success': False,
+                'error': '缺少必要参数'
+            }), 400
+        
+        feishu_config = config.get('feishu', {})
+        app_id = feishu_config.get('app_id', '')
+        app_secret = feishu_config.get('app_secret', '')
+        
+        if not app_id or not app_secret:
+            return jsonify({
+                'success': False,
+                'error': '飞书配置不完整'
+            }), 500
+        
+        client = FeishuClient(app_id, app_secret)
+        success = client.send_progress_message(
+            chat_id, title, status, current_step,
+            total_steps, current_step_index, details
+        )
+        
+        if success:
+            return jsonify({
+                'success': True
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'error': '发送进度消息失败'
+            }), 500
     
     except Exception as e:
         return jsonify({
