@@ -1,0 +1,25 @@
+{
+  "llm": {
+    "provider": "custom-ark",
+    "api_url": "https://ark.cn-beijing.volces.com/api/v3/chat/completions",
+    "model": "custom-ark-cn-beijing-volces-com/glm-4.7",
+    "api_key": "YOUR_API_KEY_HERE",
+    "temperature": 0.7,
+    "max_tokens": 2000
+  },
+  "comfyui": {
+    "host": "127.0.0.1",
+    "port": 8018,
+    "workflow_image": "workflows/image_generation.json",
+    "workflow_video": "workflows/video_generation.json"
+  },
+  "feishu": {
+    "app_id": "YOUR_APP_ID_HERE",
+    "app_secret": "YOUR_APP_SECRET_HERE"
+  },
+  "project": {
+    "name": "AI Film Studio Project",
+    "output_dir": "output",
+    "cache_dir": "cache"
+  }
+}
