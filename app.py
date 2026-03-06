@@ -151,6 +151,50 @@ def read_doc():
         return jsonify({'error': 'unsupported format'}), 400
     return jsonify({'text': text})
 
+# ── 章节解析 API ────────────────────────────────────────────
+@app.route('/api/parse_chapter', methods=['POST'])
+def parse_chapter():
+    """
+    章节解析接口：提取角色、场景和结构化信息
+    body: { chapter_text, config }
+    """
+    import json
+    
+    data = request.json
+    chapter_text = data.get('chapter_text', '')
+    config = data.get('config', None)
+    
+    if not chapter_text:
+        return jsonify({'error': 'chapter_text is required'}), 400
+    
+    try:
+        # 使用默认配置或传入的配置
+        if config is None:
+            # 从 settings.json 读取默认配置
+            with open(SETTINGS_FILE, 'r', encoding='utf-8') as f:
+                settings = json.load(f)
+                config = settings.get('llm', {})
+        
+        # 创建解析器
+        parser = ChapterParser({'llm': config})
+        
+        # 解析章节
+        result = parser.parse_chapter(chapter_text)
+        
+        return jsonify({
+            'success': True,
+            'data': result
+        })
+        
+    except Exception as e:
+        import traceback
+        print(f"章节解析失败: {e}")
+        print(traceback.format_exc())
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
 # ── LLM 调用 API ────────────────────────────────────────────
 @app.route('/api/llm', methods=['POST'])
 def call_llm():
