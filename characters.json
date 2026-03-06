@@ -1,0 +1,32 @@
+{
+  "char_林小雨": {
+    "id": "char_林小雨",
+    "name": "林小雨",
+    "description": "23岁女性，穿着米白色毛衣，长发，温柔恬静",
+    "personality": [
+      "温柔",
+      "恬静",
+      "善良"
+    ],
+    "role": "主角",
+    "importance": 10,
+    "reference_images": [],
+    "created_at": "2026-03-06T15:37:32.493402",
+    "updated_at": "2026-03-06T15:37:32.493402"
+  },
+  "char_陈默": {
+    "id": "char_陈默",
+    "name": "陈默",
+    "description": "30岁男性，穿着深灰色风衣，面容冷峻，眼神锐利",
+    "personality": [
+      "冷峻",
+      "果断",
+      "正义"
+    ],
+    "role": "主角",
+    "importance": 10,
+    "reference_images": [],
+    "created_at": "2026-03-06T15:37:32.493920",
+    "updated_at": "2026-03-06T15:37:32.493920"
+  }
+}
